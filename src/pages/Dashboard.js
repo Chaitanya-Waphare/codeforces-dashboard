@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import useContestData from '../hooks/useContestData';
 import ContestFilter from '../components/ContestFilter';
 import ContestList from '../components/ContestList';
+import './Dashboard.css'; // Import the CSS file
 
 const Dashboard = () => {
   const { contests, loading, error } = useContestData();
@@ -135,79 +136,95 @@ const Dashboard = () => {
           <TextContainer>{error}</TextContainer>
         ) : (
           <>
-            <Card sectioned>
-              <ContestFilter
-                search={search}
-                onSearchChange={setSearch}
-                type={type}
-                onTypeChange={setType}
-              />
-              <Select
-                label="Filter by Phase"
-                options={[
-                  { label: 'All', value: '' },
-                  { label: 'FAVORITES', value: 'FAVORITES' },
-                  { label: 'FINISHED', value: 'FINISHED' },
-                  { label: 'BEFORE', value: 'BEFORE' },
-                  { label: 'CODING', value: 'CODING' },
-                ]}
-                value={phase}
-                onChange={(value) => setPhase(value)}
-              />
-              <Select
-                label="Contests per Page"
-                options={[
-                  { label: '5', value: '5' },
-                  { label: '10', value: '10' },
-                  { label: '20', value: '20' },
-                ]}
-                value={contestsPerPage.toString()}
-                onChange={handleContestsPerPageChange}
-              />
-            </Card>
+            {/* Filter Strip */}
+            <div className="centered filter-strip">
+              <div className="filter-item">
+                <ContestFilter
+                  search={search}
+                  onSearchChange={setSearch}
+                  type={type}
+                  onTypeChange={setType}
+                />
+              </div>
+              <div className="filter-item">
+                <Select
+                  label="Filter by Phase"
+                  options={[
+                    { label: 'All', value: '' },
+                    { label: 'FAVORITES', value: 'FAVORITES' },
+                    { label: 'FINISHED', value: 'FINISHED' },
+                    { label: 'BEFORE', value: 'BEFORE' },
+                    { label: 'CODING', value: 'CODING' },
+                  ]}
+                  value={phase}
+                  onChange={(value) => setPhase(value)}
+                />
+              </div>
+              <div className="filter-item">
+                <Select
+                  label="Contests per Page"
+                  options={[
+                    { label: '5', value: '5' },
+                    { label: '10', value: '10' },
+                    { label: '20', value: '20' },
+                  ]}
+                  value={contestsPerPage.toString()}
+                  onChange={handleContestsPerPageChange}
+                />
+              </div>
+            </div>
 
-            <ContestList
-              contests={currentContests}
-              onContestClick={handleContestClick}
-              onToggleFavorite={toggleFavorite}
-              favorites={favorites}
-            />
+            {/* Contest List */}
+            <div className="centered contest-list">
+              <ContestList
+                contests={currentContests}
+                onContestClick={handleContestClick}
+                onToggleFavorite={toggleFavorite}
+                favorites={favorites}
+              />
+            </div>
+
+            {/* Pagination */}
             <Layout.Section>
               <LegacyStack distribution="center">{pagination}</LegacyStack>
             </Layout.Section>
+
+            {/* Chart Section */}
             <Layout.Section>
               <Card title="Contest Duration Visualization" sectioned>
-                <ResponsiveContainer width="100%" height={400}>
-                  <BarChart
-                    data={currentContests.map((contest) => ({
-                      name: contest.name,
-                      durationSeconds: contest.durationSeconds / 3600, // Convert to hours
-                    }))}
-                    margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
-                  >
-                    <XAxis
-                      dataKey="name"
-                      angle={-45}
-                      textAnchor="end"
-                      interval={0}
-                      height={100}
-                    />
-                    <YAxis
-                      label={{
-                        value: 'Duration (Hours)',
-                        angle: -90,
-                        position: 'insideLeft',
-                      }}
-                    />
-                    <Tooltip />
-                    <Legend />
-                    <Bar
-                      dataKey="durationSeconds"
-                      fill="#5c6ac4"
-                      name="Duration (Hours)"
-                    />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="centered">
+                  <ResponsiveContainer width="100%" height={400}>
+                    <BarChart
+                      data={currentContests.map((contest) => ({
+                        name: contest.name,
+                        durationSeconds: contest.durationSeconds / 3600, // Convert to hours
+                      }))}
+                      margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                    >
+                      <XAxis
+                        dataKey="name"
+                        angle={-45}
+                        textAnchor="end"
+                        interval={0}
+                        height={100}
+                      />
+                      <YAxis
+                        label={{
+                          value: 'Duration (Hours)',
+                          angle: -90,
+                          position: 'insideLeft',
+                        }}
+                      />
+                      <Tooltip />
+                      <Legend />
+                      <Bar
+                        dataKey="durationSeconds"
+                        fill="#5c6ac4"
+                        name="Duration (Hours)"
+                      />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </Card>
             </Layout.Section>
           </>

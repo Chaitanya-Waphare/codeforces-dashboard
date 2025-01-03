@@ -1,0 +1,25 @@
+.centered {
+    width: 80%;
+    margin: 0 auto;
+  }
+  
+  .filter-strip {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-item {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .contest-list {
+    margin-top: 40px;
+  }
+  
+  .bar-chart {
+    margin-top: 40px;
+  }
+  
