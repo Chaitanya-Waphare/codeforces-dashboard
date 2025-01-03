@@ -128,7 +128,7 @@ const Dashboard = () => {
   };
 
   return (
-    <Page title="Codeforces Dashboard">
+    <Page title="Codeforces Dashboard" >
       <Layout>
         {loading ? (
           <Spinner accessibilityLabel="Loading contests" size="large" />
