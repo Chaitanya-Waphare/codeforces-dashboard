@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import useContestData from '../hooks/useContestData';
 import ContestFilter from '../components/ContestFilter';
 import ContestList from '../components/ContestList';
-import './Dashboard.css'; // Import the CSS file
+import './Dashboard.css';
 
 const Dashboard = () => {
   const { contests, loading, error } = useContestData();
@@ -39,7 +39,7 @@ const Dashboard = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(search);
-    }, 300); // 300ms debounce delay
+    }, 300);
 
     return () => clearTimeout(handler);
   }, [search]);
@@ -127,8 +127,26 @@ const Dashboard = () => {
     navigate(`/contest/${contestId}`);
   };
 
+  const calculateCountdown = (startTime) => {
+    const now = new Date();
+    const start = new Date(startTime);
+    const diff = start - now;
+
+    if (diff <= 0) return null;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    return { days, hours, minutes, seconds };
+  };
+
+  const upcomingContests = contests
+    .filter((contest) => new Date(contest.startTime) > new Date())
+    .slice(0, 5); // Limit to 5 upcoming contests
   return (
-    <Page title="Codeforces Dashboard" >
+    <Page title="Codeforces Dashboard">
       <Layout>
         {loading ? (
           <Spinner accessibilityLabel="Loading contests" size="large" />
@@ -173,26 +191,9 @@ const Dashboard = () => {
                 />
               </div>
             </div>
-
-            {/* Contest List */}
-            <div className="centered contest-list">
-              <ContestList
-                contests={currentContests}
-                onContestClick={handleContestClick}
-                onToggleFavorite={toggleFavorite}
-                favorites={favorites}
-              />
-            </div>
-
-            {/* Pagination */}
             <Layout.Section>
-              <LegacyStack distribution="center">{pagination}</LegacyStack>
-            </Layout.Section>
-
-            {/* Chart Section */}
-            <Layout.Section>
-              <Card title="Contest Duration Visualization" sectioned>
-                <div className="centered">
+              <Card className="centered" title="Contest Duration Visualization" sectioned>
+                <div>
                   <ResponsiveContainer width="100%" height={400}>
                     <BarChart
                       data={currentContests.map((contest) => ({
@@ -227,9 +228,31 @@ const Dashboard = () => {
                 </div>
               </Card>
             </Layout.Section>
+            {/* Contest List */}
+            <div className="centered contest-list">
+              <ContestList
+                contests={currentContests}
+                onContestClick={handleContestClick}
+                onToggleFavorite={toggleFavorite}
+                favorites={favorites}
+              />
+            </div>
+
+            {/* Pagination */}
+            <Layout.Section>
+              <LegacyStack distribution="center">{pagination}</LegacyStack>
+            </Layout.Section>
+
+            {/* Chart Section */}
+  
           </>
         )}
       </Layout>
+
+      {/* Footer */}
+      <footer className="dashboard-footer">
+        <p>Codeforces Dashboard &copy; 2025. All rights reserved.</p>
+      </footer>
     </Page>
   );
 };

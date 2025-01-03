@@ -1,14 +1,16 @@
 .centered {
-    width: 80%;
+    width: 97%;
     margin: 0 auto; /* Centers the element horizontally */
   }
   
   .filter-strip {
+    padding: 1rem 1.3rem;
+    margin-left: 21px;
     display: flex;
-    background-color: rgb(143, 255, 255);
+    background-color: white;
     justify-content: space-between;
     gap: 20px; /* Adds spacing between filter items */
-    margin-bottom: 20px; /* Adds spacing below the strip */
+    border-radius: 1rem;
   }
   
   .filter-item {
@@ -18,6 +20,7 @@
   
   .contest-list {
     margin-top: 40px; /* Adds spacing above the contest list */
+    margin-left: 22px;
   }
   
   .bar-chart {
